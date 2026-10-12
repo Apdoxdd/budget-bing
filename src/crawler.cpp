@@ -35,6 +35,44 @@ void crawler::send_request(std::string& url)
 		std::cout<<curl_easy_strerror(code)<<std::endl;
 	}
 }
+
+std::set<std::string> crawler::extract_tokens()
+{
+	std::set<std::string> tokens;
+	if (!context) return tokens;
+
+	const char *query = "//body//text()[not(ancestor::script) and not(ancestor::style)]";
+	xmlXPathObjectPtr result = xmlXPathEvalExpression((const xmlChar *)query, context);
+
+	if (result && result->nodesetval)
+	{
+		for (auto i {0}; i < result->nodesetval->nodeNr; ++i)
+		{
+			xmlChar *text = xmlNodeGetContent(result->nodesetval->nodeTab[i]);
+			if (!text) continue;
+
+			std::string word;
+			for (const unsigned char *p = text; *p; ++p) //loop until we reach a \0 which is essentially a zero
+			{
+				if (std::isalnum(*p)) // returns true if ptr points to char or num
+					word += static_cast<char>(std::tolower(*p));
+				else if (!word.empty())
+				{
+					tokens.insert(word);
+					word.clear();
+				}
+			}
+			if (!word.empty())
+				tokens.insert(word);
+
+			xmlFree(text);	
+		}
+	}
+
+	xmlXPathFreeObject(result);
+	return tokens;
+}
+
 std::set<std::string> crawler::extract_links()
 {
 	std::set<std::string> links;

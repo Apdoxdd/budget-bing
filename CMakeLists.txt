@@ -23,5 +23,5 @@ add_subdirectory(third_party/libxml2 EXCLUDE_FROM_ALL)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(basicSearch src/main.cpp src/crawler.cpp)
+add_executable(basicSearch src/main.cpp src/crawler.cpp src/indexer.cpp)
 target_link_libraries(basicSearch PRIVATE CURL::libcurl LibXml2::LibXml2)
