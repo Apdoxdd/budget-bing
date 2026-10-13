@@ -1,2 +1,1 @@
-http://quotes.toscrape.com/
-
+https://www.scrapingcourse.com/ecommerce/

@@ -11,6 +11,13 @@ crawler::crawler():seenLinks(), doc(nullptr), context(nullptr), response(""),bas
 		throw std::runtime_error{"Failed to create handle"};
 	}
 	curl_easy_setopt(handle, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
+	data_base.seekg(0);
+	std::string line;
+	while(data_base >> line)
+	{
+		seenLinks.insert(line);
+	}
+	data_base.clear();
 }
 void crawler::send_request(std::string& url)
 {
@@ -164,10 +171,12 @@ bool crawler::set_response()
 
 void crawler::update_data_base(std::set<std::string>& links)
 {
+	data_base.clear();
 
 	for(auto& link : links)
 	{
-		data_base<<link<<"\n";
+		if (seenLinks.insert(link).second)
+			data_base<<link<<"\n";
 	}
 	data_base.flush();
 }
