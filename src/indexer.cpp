@@ -10,6 +10,9 @@ void indexer::update_tree(const std::string& base_url, const std::set<std::strin
 
 const std::set<std::string>*indexer::search(const std::string& word)
 {
-	auto it = inverted_tree.find(word);
-	return (it != inverted_tree.end())? &it->second : nullptr;
+	std::unique_lock<std::mutex> lk (mx);
+	{
+		auto it = inverted_tree.find(word);
+		return (it != inverted_tree.end())? &it->second : nullptr;
+	}
 }

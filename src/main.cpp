@@ -18,6 +18,7 @@ int main()
 	tokens = c1.extract_tokens();
 	i1.update_tree(c1.base_url, tokens);
 	auto urls = i1.search("you"); // pointer to set
+				      //
 	if(urls == nullptr)
 		std::cout<<"No results found"<<std::endl;
 	else
@@ -30,6 +31,7 @@ int main()
 	}
 
 	links = c1.extract_links();
+	links = c1.normalize_links(links);
 	c1.update_data_base(links);
 
 }

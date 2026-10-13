@@ -4,6 +4,7 @@
 #include <libxml/HTMLparser.h>
 #include <libxml/xpath.h>
 #include <set>
+#include <cstring>
 #include <iostream>
 
 class crawler 
@@ -27,7 +28,8 @@ public:
 	std::set<std::string>extract_links();	
 	bool setup_xml();
 	void update_data_base(std::set<std::string>& links);
+	std::set<std::string> normalize_links(const std::set<std::string>& links);
 
-
+	friend class engine;
 };
 

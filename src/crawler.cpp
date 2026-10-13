@@ -106,6 +106,38 @@ std::set<std::string> crawler::extract_links()
 	context = nullptr;
 	return links;
 }
+
+std::set<std::string> crawler::normalize_links(const std::set<std::string>& links)
+{
+	std::set<std::string> clean;
+	CURLU *u = curl_url();
+
+	if (!u)
+		return clean;
+	for (const auto& href : links)
+	{
+		if (curl_url_set(u, CURLUPART_URL, base_url.c_str(), 0) != CURLUE_OK) continue;
+		if (curl_url_set(u, CURLUPART_URL, href.c_str(), 0) != CURLUE_OK) continue;
+
+		char *scheme {nullptr};
+		if (curl_url_get(u, CURLUPART_SCHEME, &scheme, 0) != CURLUE_OK) continue;
+		bool is_web = (std::strcmp(scheme, "http") == 0 || std::strcmp(scheme, "https") == 0);
+		curl_free(scheme);
+		if (!is_web) continue;
+
+		curl_url_set(u, CURLUPART_FRAGMENT, nullptr, 0);
+
+		char *out = nullptr;
+		if (curl_url_get(u, CURLUPART_URL, &out, CURLU_NO_DEFAULT_PORT) != CURLUE_OK)
+			continue;
+		clean.insert(out);
+		curl_free(out);
+	}
+	curl_url_cleanup(u);
+	return clean;
+}
+
+
 bool crawler:: setup_xml()
 {
 
