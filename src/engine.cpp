@@ -52,7 +52,6 @@ void engine::search()
 		}
 		else 
 		{
-			std::cout<<"#################################################"<<std::endl;
 			std::cout<<"The results: "<<std::endl;
 			for (auto& url : *results)
 			{
@@ -61,8 +60,8 @@ void engine::search()
 			std::cout<<"#################################################"<<std::endl;
 
 		}
-		std::cout<<count<<std::endl;
-		std::cout<<"#################################################"<<std::endl;
+		std::cout<<"pages recived from server to tokenize:"<<count<<std::endl;
+		std::cout<<"---------------------------------------"<<std::endl;
 
 
 	}
